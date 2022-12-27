@@ -25,7 +25,7 @@ jobs:
     - name: Build
       run: dotnet build ./src --no-restore --configuration Release
     - name: Test
-      run: dotnet test ./src/QueryR.Tests --no-restore --verbosity quiet --nologo --configuration Release --collect:"XPlat Code Coverage" --results-directory coverage
+      run: dotnet test ./src/QueryR.Tests --verbosity quiet --nologo --configuration Release --collect:"XPlat Code Coverage" --results-directory coverage
     - name: Copy Coverage to Predictable Location
       run: cp coverage/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
     - name: Setup .NET Core # Required to execute ReportGenerator
