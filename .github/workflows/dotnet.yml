@@ -25,7 +25,9 @@ jobs:
     - name: Build
       run: dotnet build ./src --no-restore --configuration Release
     - name: Test
-      run: dotnet test ./src/QueryR.Tests --verbosity quiet --nologo --configuration Release --collect:"XPlat Code Coverage"
+      run: dotnet test ./src/QueryR.Tests --no-restore --verbosity quiet --nologo --configuration Release --collect:"XPlat Code Coverage" --results-directory coverage
+    - name: Copy Coverage to Predictable Location
+      run: cp coverage/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
     - name: Setup .NET Core # Required to execute ReportGenerator
       uses: actions/setup-dotnet@v3
       with:
@@ -34,5 +36,7 @@ jobs:
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@5.1.13
       with:
-        reports: cobertura.xml
+        reports: coverage/coverage.cobertura.xml
         targetdir: coveragereport
+        reporttypes: MarkdownSummaryGithub
+
