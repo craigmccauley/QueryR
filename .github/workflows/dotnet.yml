@@ -38,9 +38,6 @@ jobs:
       with:
         reports: coverage/coverage.cobertura.xml
         targetdir: coveragereport
-    - name: Upload coverage report artifact
-      uses: actions/upload-artifact@v2.2.3
-      with:
-        name: CoverageReport # Artifact name        
-        path: coveragereport # Directory containing files to upload
-
+        reporttypes: MarkdownSummaryGithub
+    - name: Adding markdown summary
+      run: echo 'cat coveragereport/SummaryGithub.md' >> $GITHUB_STEP_SUMMARY
