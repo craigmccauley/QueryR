@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build ./src --no-restore --configuration Release
     - name: Test
-      run: dotnet test ./src/QueryR.Tests --no-build --verbosity quiet --nologo --configuration Release
+      run: dotnet test ./src/QueryR.Tests --verbosity quiet --nologo --configuration Release --collect:"XPlat Code Coverage"
