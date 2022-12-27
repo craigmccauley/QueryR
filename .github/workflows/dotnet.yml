@@ -40,4 +40,4 @@ jobs:
         targetdir: coveragereport
         reporttypes: MarkdownSummaryGithub
     - name: Adding markdown summary
-      run: echo 'cat coveragereport/SummaryGithub.md' >> $GITHUB_STEP_SUMMARY
+      run: cat coveragereport/SummaryGithub.md > $GITHUB_STEP_SUMMARY
