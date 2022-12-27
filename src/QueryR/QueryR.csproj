@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<PackageId>QueryR</PackageId>
+		<PackageIcon>logo.png</PackageIcon>
+		<Authors>Craig McCauley</Authors>
+		<PackageTags>IQueryable;Query;Queries;CraigMcCauley;QueryR</PackageTags>
+		<Description>This library provides a simplified interface for performing queries against IQueryable objects.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="QueryR.Tests" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\assets\logo.png" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+</Project>
