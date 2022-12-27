@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore ./src --configuration Release
+      run: dotnet restore ./src
     - name: Build
       run: dotnet build ./src --no-restore --configuration Release
     - name: Test
