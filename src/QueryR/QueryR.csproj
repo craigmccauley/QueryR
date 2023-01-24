@@ -14,7 +14,7 @@
 		<RepositoryUrl>https://github.com/craigmccauley/QueryR.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>IQueryable;Query;Queries;CraigMcCauley;QueryR;adhoc;ad-hoc</PackageTags>
-		<PackageReleaseNotes>Testing nuget package generation and upload.</PackageReleaseNotes>
+		<PackageReleaseNotes>First release!</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 

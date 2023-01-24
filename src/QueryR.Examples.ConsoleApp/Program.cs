@@ -2,8 +2,6 @@
 using QueryR.Examples.ConsoleApp.MenuSystem;
 using QueryR.Examples.Data;
 using QueryR.QueryModels;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 
 public class Program
 {
