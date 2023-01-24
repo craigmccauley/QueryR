@@ -145,6 +145,7 @@ foreach(var item in queryResult)
 //  - Bob
 //  - Jeb
 //  - Val
+```
 
 ## Working Example
 
