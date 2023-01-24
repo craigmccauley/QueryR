@@ -6,7 +6,7 @@
 		<PackageVersion>0.0.1-alpha</PackageVersion>
 		<Authors>Craig McCauley</Authors>
 		<Description>This library provides a simplified interface for performing ad-hoc queries against IQueryable objects.</Description>
-		<Copyright>Copyright (c) Craig McCauley 2022</Copyright>
+		<Copyright>Copyright (c) Craig McCauley 2023</Copyright>
 		<PackageProjectUrl>https://github.com/craigmccauley/QueryR</PackageProjectUrl>
 		<PackageIcon>logo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/craigmccauley/QueryR</RepositoryUrl>
