@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="QueryR.Tests" />
+		<InternalsVisibleTo Include="QueryR.EntityFrameworkCore" />		
 		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
 
