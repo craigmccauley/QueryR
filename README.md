@@ -6,6 +6,8 @@
 
 QueryR provides a simple interface for executing ad hoc queries against `IQueryable<T>` implementations.
 
+If you intent to use QueryR with EntityFrameworkCore, please use [QueryR.EntityFrameworkCore](https://github.com/craigmccauley/QueryR.EntityFrameworkCore).
+
 This is useful in situations where there is a need to provide end users with the ability to create custom queries without increasing the complexity of the solution.
 
 In practice you will have your own domain query criteria object that collects what you want to query. You will perform a map to the `QueryR.Query` object and send it to the `IQueryable<T>.Query` method.
