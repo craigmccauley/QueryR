@@ -69,6 +69,14 @@ namespace QueryR.QueryModels
                 typeof(string).GetMethod(nameof(string.EndsWith), new Type[] { typeof(string) }),
                 target)
         );
+        public static readonly FilterOperator CollectionContains = new FilterOperator(
+            "cc",
+            nameof(CollectionContains),
+            (property, target) => Expression.Call(
+                property,
+                property.Type.GetMethod("Contains", new Type[] { target.Type }),
+                target)
+        );
 
         public static readonly IReadOnlyList<FilterOperator> Items = new List<FilterOperator>
         {
@@ -82,6 +90,7 @@ namespace QueryR.QueryModels
             In,
             StartsWith,
             EndsWith,
+            CollectionContains,
         };
 
         public static readonly Dictionary<string, FilterOperator> ToItem = Items.ToDictionary(item => item.Code, item => item);

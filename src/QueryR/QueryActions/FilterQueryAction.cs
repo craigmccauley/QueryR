@@ -1,6 +1,7 @@
 ﻿using QueryR.Extensions;
 using QueryR.QueryModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,19 +12,15 @@ namespace QueryR.QueryActions
     {
         public QueryResult<T> Execute<T>(Query query, QueryResult<T> queryResult)
         {
-            if (queryResult == null || queryResult.PagedQuery == null)
-            {
-                throw new ArgumentNullException(nameof(queryResult));
-            }
+            ValidateQueryResult(queryResult);
 
-            foreach (var filter in query.Filters ?? Enumerable.Empty<Filter>())
+            foreach (var filter in query?.Filters ?? Enumerable.Empty<Filter>())
             {
                 var parameter = Expression.Parameter(typeof(T), "t");
-                Expression memberExpression = parameter;
+                var propertyNames = new Queue<string>(filter.PropertyName.Split('.'));
+                var filterExpression = FilterExpression(typeof(T), parameter, propertyNames, filter);
 
-                var propertyNames = new Queue<string>(filter.PropertyName.Split(new[] { "." }, StringSplitOptions.None));
-                var result = GetMemberExpression(typeof(T), memberExpression, propertyNames, filter, parameter);
-                var lambda = Expression.Lambda<Func<T, bool>>(result, parameter);
+                var lambda = Expression.Lambda<Func<T, bool>>(filterExpression, parameter);
                 queryResult.PagedQuery = queryResult.PagedQuery.Where(lambda);
                 queryResult.CountQuery = queryResult.CountQuery.Where(lambda);
             }
@@ -31,86 +28,125 @@ namespace QueryR.QueryActions
             return queryResult;
         }
 
+        private void ValidateQueryResult<T>(QueryResult<T> queryResult)
+        {
+            if (queryResult == null)
+            {
+                throw new ArgumentNullException(nameof(queryResult), "QueryResult cannot be null.");
+            }
+
+            if (queryResult.PagedQuery == null)
+            {
+                throw new ArgumentNullException($"{nameof(queryResult)}.{nameof(QueryResult<T>.PagedQuery)}", "PagedQuery within QueryResult cannot be null.");
+            }
+
+            if (queryResult.CountQuery == null)
+            {
+                throw new ArgumentNullException($"{nameof(queryResult)}.{nameof(QueryResult<T>.CountQuery)}", "CountQuery within QueryResult cannot be null.");
+            }
+        }
+
         /// <summary>
         /// Recursive method to build Property chain with .Any() on collections.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="previousExpression"></param>
-        /// <param name="propertyNames"></param>
-        /// <param name="filter"></param>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private Expression GetMemberExpression(
+        private Expression FilterExpression(
             Type type,
-            Expression previousExpression,
+            Expression parentExpression,
             Queue<string> propertyNames,
-            Filter filter,
-            ParameterExpression parameter)
+            Filter filter)
         {
             var propertyName = propertyNames.Dequeue();
+            var enumerableType = TypeExtensions.FindElementType(parentExpression.Type);
 
-            var enumerableType = TypeExtensions.FindElementType(previousExpression.Type);
+            var isStillNavigating = propertyNames.Any();
+            var isObject = enumerableType == null;
 
-            // If at end, return Property Expression.
-            if (!propertyNames.Any())
+            return (isStillNavigating, isObject).TruthTable(
+                //end of navigation, is collection
+                () => CollectionFilter(enumerableType, parentExpression, propertyName, filter),
+                //end of navigation, is object
+                () => ObjectFilter(enumerableType, parentExpression, propertyName, filter),
+                //still navigating, is collection
+                () => ChainedCollectionExpression(enumerableType, parentExpression, propertyName, propertyNames, filter),
+                //still navigating, is object
+                () => ChainedObjectExpression(parentExpression, propertyName, propertyNames, filter)
+            )();
+        }
+
+        /// <summary>
+        /// eg. t.Items.Any(item => item.Name == "MyItem")
+        /// </summary>
+        private Expression CollectionFilter(Type elementType, Expression parentExpression, string propertyName, Filter filter)
+        {
+            var itemParameter = Expression.Parameter(elementType, "item");
+            var itemProperty = Expression.Property(itemParameter, propertyName);
+            var targetValue = Expression.Constant(filter.Value.Convert(itemProperty.Type), itemProperty.Type);
+            var filterExpression = filter.Operator.ExpressionMethod(itemProperty, targetValue);
+            return Any(elementType, parentExpression, itemParameter, filterExpression);
+        }
+
+        private Expression ObjectFilter(Type elementType, Expression parentExpression, string propertyName, Filter filter)
+        {
+            var memberExpression = Expression.Property(parentExpression, propertyName);
+            //eg. t.ListOfNames.Contains("MyName")
+            if (typeof(IEnumerable).IsAssignableFrom(memberExpression.Type)
+                && memberExpression.Type != typeof(string))
             {
-                Expression endExpression = null;
-                //if collection, use any
-                if (enumerableType != null)
-                {
-                    var childItem = Expression.Parameter(enumerableType, "item");
-                    var childItemProperty = Expression.Property(childItem, propertyName);
-                    var target = Expression.Constant(filter.Value.Convert(childItemProperty.Type), childItemProperty.Type);
-                    var operatorExpression = filter.Operator.ExpressionMethod(childItemProperty, target);
-
-                    var anyLambda = Expression.Lambda(operatorExpression, childItem);
-
-                    var anyCall = Expression.Call(
-                            typeof(Enumerable).GetGenericMethod(nameof(Enumerable.Any), 1, 2, enumerableType),
-                            previousExpression,
-                            anyLambda);
-
-                    endExpression = anyCall;
-                }
-                else
-                {
-                    var memberExpression = Expression.Property(previousExpression, propertyName);
-                    var target = Expression.Constant(filter.Value.Convert(memberExpression.Type), memberExpression.Type);
-                    endExpression = filter.Operator.ExpressionMethod(memberExpression, target);
-                }
-
-                return endExpression;
+                var type = TypeExtensions.FindElementType(memberExpression.Type);
+                var target = Expression.Constant(filter.Value.Convert(type), type);
+                return filter.Operator.ExpressionMethod(memberExpression, target);
             }
-
-            // If collection, recurse on children.
-            if (enumerableType != null)
-            {
-                var childItem = Expression.Parameter(enumerableType, "item");
-                var childItemProperty = Expression.Property(childItem, propertyName);
-
-                var childItemPropertySubExpression = GetMemberExpression(
-                    enumerableType,
-                    childItemProperty,
-                    propertyNames,
-                    filter,
-                    childItem);
-
-                var anyLambda = Expression.Lambda(childItemPropertySubExpression, childItem);
-
-                var anyCall = Expression.Call(
-                        typeof(Enumerable).GetGenericMethod(nameof(Enumerable.Any), 1, 2, enumerableType),
-                        previousExpression,
-                        anyLambda);
-
-                return anyCall;
-            }
-            // If not, recurse on property.
+            //eg. t.Name == "MyItem"
             else
             {
-                var memberExpression = Expression.Property(previousExpression, propertyName);
-                var nullCheck = Expression.Equal(memberExpression, Expression.Constant(null));
-                return Expression.Condition(nullCheck, Expression.Constant(false), GetMemberExpression(type, memberExpression, propertyNames, filter, parameter));
+                var target = Expression.Constant(filter.Value.Convert(memberExpression.Type), memberExpression.Type);
+                return filter.Operator.ExpressionMethod(memberExpression, target);
             }
+        }
+
+        /// <summary>
+        /// eg. t.Items.Any(item => ...
+        /// </summary>
+        private Expression ChainedCollectionExpression(
+            Type elementType,
+            Expression parentExpression,
+            string propertyName,
+            Queue<string> propertyNames,
+            Filter filter)
+        {
+            var itemParameter = Expression.Parameter(elementType, "item");
+            var itemProperty = Expression.Property(itemParameter, propertyName);
+            var subExpression = FilterExpression(elementType, itemProperty, propertyNames, filter);
+
+            return Any(elementType, parentExpression, itemParameter, subExpression);
+        }
+
+        /// <summary>
+        /// eg. IIF(t.Items == null, False, ...
+        /// </summary>
+        private Expression ChainedObjectExpression(
+            Expression parentExpression,
+            string propertyName,
+            Queue<string> propertyNames,
+            Filter filter)
+        {
+            var memberExpression = Expression.Property(parentExpression, propertyName);
+            var nullCheck = Expression.Equal(memberExpression, Expression.Constant(null));
+            var nestedExpression = FilterExpression(memberExpression.Type, memberExpression, propertyNames, filter);
+
+            return Expression.Condition(nullCheck, Expression.Constant(false), nestedExpression);
+        }
+
+        private Expression Any(
+            Type elementType,
+            Expression parentExpression,
+            ParameterExpression itemParameter,
+            Expression subExpression)
+        {
+            return Expression.Call(
+                typeof(Enumerable).GetGenericMethod(nameof(Enumerable.Any), 1, 2, elementType),
+                parentExpression,
+                Expression.Lambda(subExpression, itemParameter));
         }
     }
 }

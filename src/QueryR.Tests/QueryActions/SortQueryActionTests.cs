@@ -44,7 +44,7 @@ namespace QueryR.Tests.QueryActions
             var (count, list) = result.GetCountAndList();
             count.Should().Be(2);
             list.First().Should().Be(testData.Craig);
-            list.Skip(1).First().Should().Be(testData.AlsoCraig);
+            list.Skip(1).First().Should().Be(testData.Bob);
         }
 
         [Theory, AutoSubData]

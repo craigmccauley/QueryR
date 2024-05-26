@@ -11,6 +11,7 @@ namespace QueryR.Tests.TestHelpers
             public string Name { get; set; }
             public int Age { get; set; }
             public List<Pet> Pets { get; set; }
+            public List<string> AltNames { get; set; }
         }
         public class Pet
         {
@@ -33,7 +34,7 @@ namespace QueryR.Tests.TestHelpers
         public List<PetType> PetTypes { get; init; }
 
         public Person Craig { get; init; }
-        public Person AlsoCraig { get; init; }
+        public Person Bob { get; init; }
         public List<Person> Persons { get; init; }
 
         public Pet Titan { get; init; }
@@ -49,8 +50,8 @@ namespace QueryR.Tests.TestHelpers
             Dog = new PetType { Id = 2, Name = "Dog" };
             Bird = new PetType { Id = 3, Name = "Bird" };
 
-            Craig = new Person { Id = 1, Name = "Craig" };
-            AlsoCraig = new Person { Id = 2, Name = "Also Craig" };
+            Craig = new Person { Id = 1, Name = "Craig", AltNames = ["Greg"] };
+            Bob = new Person { Id = 2, Name = "Bob", AltNames = ["Robert", "Robbie"]  };
 
             Titan = new Pet { Id = 1, Name = "Titan", OwnerId = 1, PetTypeId = 2 };
             Rufus = new Pet { Id = 2, Name = "Rufus", OwnerId = 2, PetTypeId = 2 };
@@ -59,7 +60,7 @@ namespace QueryR.Tests.TestHelpers
             Tweeter = new Pet { Id = 5, Name = "Tweeter", OwnerId = 1, PetTypeId = 3 };
 
             PetTypes = new List<PetType> { Cat, Dog, Bird };
-            Persons = new List<Person> { Craig, AlsoCraig };
+            Persons = new List<Person> { Craig, Bob };
             Pets = new List<Pet> { Titan, Rufus, Meowswers, Kitty, Tweeter };
 
             foreach (var person in Persons)

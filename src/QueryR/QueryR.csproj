@@ -16,6 +16,7 @@
 		<PackageTags>IQueryable;Query;Queries;CraigMcCauley;QueryR;adhoc;ad-hoc</PackageTags>
 		<PackageReleaseNotes>Maintenance required for QueryR.EntityFrameworkCore</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
