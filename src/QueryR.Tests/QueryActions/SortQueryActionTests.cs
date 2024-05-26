@@ -11,7 +11,7 @@ namespace QueryR.Tests.QueryActions
 {
     public class SortQueryActionTests
     {
-        [Theory, AutoMoqData]
+        [Theory, AutoSubData]
         internal void Sort_ShouldWorkAsExpected(
             SortQueryAction sut)
         {
@@ -47,7 +47,7 @@ namespace QueryR.Tests.QueryActions
             list.Skip(1).First().Should().Be(testData.AlsoCraig);
         }
 
-        [Theory, AutoMoqData]
+        [Theory, AutoSubData]
         internal void Sort_WhenItemIsOnNavigationPropertyPath_ShouldWorkAsExpected(
             SortQueryAction sut)
         {

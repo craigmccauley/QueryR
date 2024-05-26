@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using QueryR.QueryActions;
 using QueryR.QueryModels;
 using QueryR.Services;
@@ -14,13 +14,15 @@ namespace QueryR.Tests.QueryActions
 {
     public class SparseFieldsQueryActionTests
     {
-        [Theory, AutoMoqData]
+        [Theory, AutoSubData]
         internal void SparseField_ShouldWorkAsExpected(
-            [Frozen] Mock<IMaxDepthService> maxDepthServiceMock,
+            [Frozen] IMaxDepthService maxDepthServiceMock,
             SparseFieldsQueryAction sut)
         {
             //arrange
-            maxDepthServiceMock.Setup(svc => svc.GetMaxDepth(It.IsAny<Query>())).Returns(new int?());
+            maxDepthServiceMock
+                .GetMaxDepth(Arg.Any<Query>())
+                .Returns(new int?());
             var testData = new TestData();
             var queryResult = new QueryResult<Person>
             {

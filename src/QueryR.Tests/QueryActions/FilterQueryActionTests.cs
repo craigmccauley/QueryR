@@ -11,7 +11,7 @@ namespace QueryR.Tests.QueryActions
 {
     public class FilterQueryActionTests
     {
-        [Theory, AutoMoqData]
+        [Theory, AutoSubData]
         internal void Filter_ShouldWorkAsExpected(
             FilterQueryAction sut)
         {
@@ -46,7 +46,7 @@ namespace QueryR.Tests.QueryActions
             list.First().Should().Be(testData.Craig);
         }
 
-        [Theory, AutoMoqData]
+        [Theory, AutoSubData]
         internal void Filter_WhenItemIsOnNavigationPropertyPath_ShouldWorkAsExpected(
             FilterQueryAction sut)
         {

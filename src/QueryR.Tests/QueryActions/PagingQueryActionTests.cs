@@ -11,7 +11,7 @@ namespace QueryR.Tests.QueryActions
     public class PagingQueryActionTests
     {
 
-        [Theory, AutoMoqData]
+        [Theory, AutoSubData]
         internal void Paging_ShouldWorkAsExpected(
             PagingQueryAction sut)
         {
