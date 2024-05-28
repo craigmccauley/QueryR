@@ -67,10 +67,9 @@ namespace QueryR
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
-        /// <param name="firstQueryPart"></param>
         /// <param name="queryParts"></param>
         /// <returns></returns>
-        public static QueryResult<T> Query<T>(this IQueryable<T> source, IEnumerable<IQueryPart> filters)
+        public static QueryResult<T> Query<T>(this IQueryable<T> source, IEnumerable<IQueryPart> queryParts)
         {
             var query = new Query
             {
@@ -79,7 +78,7 @@ namespace QueryR
                 SparseFields = new List<SparseField>()
             };
 
-            foreach (var item in filters)
+            foreach (var item in queryParts)
             {
                 if (item is Filter filter)
                 {
