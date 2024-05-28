@@ -9,8 +9,11 @@ namespace QueryR.QueryActions
         {
             if (query.PagingOptions != null)
             {
+                //one-based indexing for pages
+                //TODO: Configuration for 0-based indexing?
+                var skipCount = (query.PagingOptions.PageNumber - 1) * query.PagingOptions.PageSize;
                 queryResult.PagedQuery = queryResult.PagedQuery
-                    .Skip((query.PagingOptions.PageNumber - 1) * query.PagingOptions.PageSize)
+                    .Skip(skipCount)
                     .Take(query.PagingOptions.PageSize);
             }
 

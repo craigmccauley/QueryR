@@ -33,7 +33,7 @@ namespace QueryR.QueryActions
 
             return queryResult;
         }
-        public static string GetOrderMethodName(bool isFirst, bool isAscending) => isFirst ?
+        private static string GetOrderMethodName(bool isFirst, bool isAscending) => isFirst ?
                 isAscending ? nameof(Queryable.OrderBy) : nameof(Queryable.OrderByDescending) :
                 isAscending ? nameof(Queryable.ThenBy) : nameof(Queryable.ThenByDescending);
     }
