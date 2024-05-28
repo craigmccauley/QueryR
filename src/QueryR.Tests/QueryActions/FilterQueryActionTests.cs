@@ -150,6 +150,110 @@ namespace QueryR.Tests.QueryActions
             count.Should().Be(1);
             list.First().Should().Be(testData.Bob);
         }
+        [Theory, AutoSubData]
+        internal void Filter_WhenParentNavigationPropertyPathIsCollection_ShouldWorkAsExpected(
+            FilterQueryAction sut)
+        {
+            //arrange
+            var testData = new TestData();
+            var queryResult = new QueryResult<Person>
+            {
+                CountQuery = testData.Persons.AsQueryable(),
+                PagedQuery = testData.Persons.AsQueryable(),
+            };
+
+            var query = new Query
+            {
+                Filters = new List<Filter>
+                {
+                    new Filter
+                    {
+                        PropertyName = $"{nameof(Person.Pets)}.{nameof(Pet.AltNames)}",
+                        Operator = FilterOperators.CollectionContains,
+                        Value = "Stinky"
+                    }
+                }
+            };
+
+            //act
+            var result = sut.Execute(query, queryResult);
+
+            //assert
+            var (count, list) = result.GetCountAndList();
+            count.Should().Be(2);
+            list.Should().Contain(testData.Craig);
+            list.Should().Contain(testData.Bob);
+        }
+
+        [Theory, AutoSubData]
+        internal void Filter_WhenCollectionWithTypeMismatch_ShouldNotFilter(
+            FilterQueryAction sut)
+        {
+            //arrange
+            var testData = new TestData();
+            var queryResult = new QueryResult<Person>
+            {
+                CountQuery = testData.Persons.AsQueryable(),
+                PagedQuery = testData.Persons.AsQueryable(),
+            };
+
+            var query = new Query
+            {
+                Filters = new List<Filter>
+                {
+                    new Filter
+                    {
+                        PropertyName = $"{nameof(Person.Pets)}.{nameof(Pet.AltNames)}",
+                        Operator = FilterOperators.Equal,
+                        Value = "Stinky"
+                    }
+                }
+            };
+
+            //act
+            QueryResult<Person> result = null;
+            var exception = Record.Exception(() => result = sut.Execute(query, queryResult));
+
+            //assert
+            exception.Should().BeNull();
+            var (count, items) = result.GetCountAndList();
+            items.Should().BeEquivalentTo(testData.Persons);
+        }
+
+        [Theory, AutoSubData]
+        internal void Filter_WhenObjectWithTypeMismatch_ShouldNotFilter(
+            FilterQueryAction sut)
+        {
+            //arrange
+            var testData = new TestData();
+            var queryResult = new QueryResult<Person>
+            {
+                CountQuery = testData.Persons.AsQueryable(),
+                PagedQuery = testData.Persons.AsQueryable(),
+            };
+
+            var query = new Query
+            {
+                Filters = new List<Filter>
+                {
+                    new Filter
+                    {
+                        PropertyName = $"{nameof(Person.Age)}",
+                        Operator = FilterOperators.CollectionContains,
+                        Value = "4"
+                    }
+                }
+            };
+
+            //act
+            QueryResult<Person> result = null;
+            var exception = Record.Exception(() => result = sut.Execute(query, queryResult));
+
+            //assert
+            exception.Should().BeNull();
+            var (count, items) = result.GetCountAndList();
+            items.Should().BeEquivalentTo(testData.Persons);
+        }
 
         [Theory, AutoSubData]
         internal void Filter_WhenQueryResultIsNull_ShouldThrowArgumentNullException(

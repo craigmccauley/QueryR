@@ -17,5 +17,9 @@ namespace QueryR.Tests.TestHelpers
                 (list[n], list[k]) = (list[k], list[n]);
             }
         }
+        public static T PickRandom<T>(this IList<T> list)
+        {
+            return list[rng.Next(list.Count)];
+        }
     }
 }

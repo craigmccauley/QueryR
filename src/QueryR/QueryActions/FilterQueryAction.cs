@@ -74,17 +74,19 @@ namespace QueryR.QueryActions
         }
 
         /// <summary>
-        /// eg. t.Items.Any(item => item.Name == "MyItem")
+        /// eg. t.Items.Any(item => [ObjectFilter])
         /// </summary>
         private Expression CollectionFilter(Type elementType, Expression parentExpression, string propertyName, Filter filter)
         {
             var itemParameter = Expression.Parameter(elementType, "item");
-            var itemProperty = Expression.Property(itemParameter, propertyName);
-            var targetValue = Expression.Constant(filter.Value.Convert(itemProperty.Type), itemProperty.Type);
-            var filterExpression = filter.Operator.ExpressionMethod(itemProperty, targetValue);
+            var filterExpression = ObjectFilter(elementType, itemParameter, propertyName, filter);
             return Any(elementType, parentExpression, itemParameter, filterExpression);
         }
 
+        /// <summary>
+        /// If collection, t.ListOfNames.Contains("MyName")
+        /// If object, t.Name == "MyItem"
+        /// </summary>
         private Expression ObjectFilter(Type elementType, Expression parentExpression, string propertyName, Filter filter)
         {
             var memberExpression = Expression.Property(parentExpression, propertyName);
@@ -94,13 +96,35 @@ namespace QueryR.QueryActions
             {
                 var type = TypeExtensions.FindElementType(memberExpression.Type);
                 var target = Expression.Constant(filter.Value.Convert(type), type);
-                return filter.Operator.ExpressionMethod(memberExpression, target);
+
+                try
+                {
+                    return filter.Operator.ExpressionMethod(memberExpression, target);
+                }
+                //If we get an expression we can't handle, silently do not filter.
+                //TODO: In future perhaps we should configure silent fail and/or a "CanExecute" on FilterOperator class.
+                catch
+                {
+                    return Expression.Constant(true);
+                }
+
+
             }
             //eg. t.Name == "MyItem"
             else
             {
                 var target = Expression.Constant(filter.Value.Convert(memberExpression.Type), memberExpression.Type);
-                return filter.Operator.ExpressionMethod(memberExpression, target);
+                try
+                {
+                    return filter.Operator.ExpressionMethod(memberExpression, target);
+                }
+
+                //If we get an expression we can't handle, silently do not filter.
+                //TODO: In future perhaps we should configure silent fail and/or a "CanExecute" on FilterOperator class.
+                catch
+                {
+                    return Expression.Constant(true);
+                }
             }
         }
 

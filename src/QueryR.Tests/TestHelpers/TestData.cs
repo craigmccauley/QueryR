@@ -21,6 +21,7 @@ namespace QueryR.Tests.TestHelpers
             public Person Owner { get; set; }
             public int PetTypeId { get; set; }
             public PetType PetType { get; set; }
+            public List<string> AltNames { get; set; }
         }
         public class PetType
         {
@@ -50,14 +51,14 @@ namespace QueryR.Tests.TestHelpers
             Dog = new PetType { Id = 2, Name = "Dog" };
             Bird = new PetType { Id = 3, Name = "Bird" };
 
-            Craig = new Person { Id = 1, Name = "Craig", AltNames = ["Greg"] };
-            Bob = new Person { Id = 2, Name = "Bob", AltNames = ["Robert", "Robbie"]  };
+            Craig = new Person { Id = 1, Name = "Craig", Age = 20, AltNames = ["Greg"] };
+            Bob = new Person { Id = 2, Name = "Bob", Age = 25, AltNames = ["Robert", "Robbie"] };
 
-            Titan = new Pet { Id = 1, Name = "Titan", OwnerId = 1, PetTypeId = 2 };
-            Rufus = new Pet { Id = 2, Name = "Rufus", OwnerId = 2, PetTypeId = 2 };
-            Meowswers = new Pet { Id = 3, Name = "Meowswers", OwnerId = 1, PetTypeId = 1 };
-            Kitty = new Pet { Id = 4, Name = "Kitty", OwnerId = 2, PetTypeId = 1 };
-            Tweeter = new Pet { Id = 5, Name = "Tweeter", OwnerId = 1, PetTypeId = 3 };
+            Titan = new Pet { Id = 1, Name = "Titan", OwnerId = 1, PetTypeId = 2, AltNames = ["Mr Slobber", "Stinky"] };
+            Rufus = new Pet { Id = 2, Name = "Rufus", OwnerId = 2, PetTypeId = 2, AltNames = ["Stinky", "Sir Barks-a-lot"] };
+            Meowswers = new Pet { Id = 3, Name = "Meowswers", OwnerId = 1, PetTypeId = 1, AltNames = ["BAD CAT!"] };
+            Kitty = new Pet { Id = 4, Name = "Kitty", OwnerId = 2, PetTypeId = 1, AltNames = ["Puddin'"] };
+            Tweeter = new Pet { Id = 5, Name = "Tweeter", OwnerId = 1, PetTypeId = 3, AltNames = ["Chirp Chirp"] };
 
             PetTypes = new List<PetType> { Cat, Dog, Bird };
             Persons = new List<Person> { Craig, Bob };
