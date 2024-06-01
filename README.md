@@ -6,13 +6,13 @@
 
 QueryR provides a simple interface for executing ad hoc queries against `IQueryable<T>` implementations.
 
-If you intend to use QueryR with EntityFrameworkCore, please use [QueryR.EntityFrameworkCore](https://github.com/craigmccauley/QueryR.EntityFrameworkCore).
-
 This is useful in situations where there is a need to provide end users with the ability to create custom queries without increasing the complexity of the solution.
 
 In practice you will have your own domain query criteria object that collects what you want to query. You will perform a map to the `QueryR.Query` object and send it to the `IQueryable<T>.Query` method.
 
-## Basic Example
+If you intend to use QueryR with EntityFrameworkCore, please use [QueryR.EntityFrameworkCore](https://github.com/craigmccauley/QueryR.EntityFrameworkCore).
+
+## Basic Functionality Example
 
 ```CSharp
 var kerbals = new List<Kerbal>
@@ -23,6 +23,7 @@ var kerbals = new List<Kerbal>
     new Kerbal { FirstName = "Val", LastName = "Kerman" },
 };
 
+//Note: 
 var queryResult = kerbals.AsQueryable().Query(new Filter
 {
     PropertyName = nameof(Kerbal.FirstName),
@@ -112,6 +113,7 @@ QueryR provides the following filters:
 - In
 - StartsWith
 - EndsWith
+- CollectionContains
 
 Extra filters can be defined and used as if they were a part of QueryR.
 For example, if a string length filter was needed.
