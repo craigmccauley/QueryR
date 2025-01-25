@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +25,6 @@ public class CollectionContainsTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().Contain(list => list.Contains(valueToFind));
+        result.ShouldContain(list => list.Contains(valueToFind));
     }
 }

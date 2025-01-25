@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using QueryR.QueryActions;
+﻿using QueryR.QueryActions;
 using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -42,9 +42,9 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(2);
-            list.First().Should().Be(testData.Craig);
-            list.Skip(1).First().Should().Be(testData.Bob);
+            count.ShouldBe(2);
+            list.First().ShouldBe(testData.Craig);
+            list.Skip(1).First().ShouldBe(testData.Bob);
         }
 
         [Theory, AutoSubData]
@@ -81,11 +81,11 @@ namespace QueryR.Tests.QueryActions
             var result = sut.Execute(query, queryResult).ToList();
 
             //assert
-            result[0].Should().BeSameAs(testData.Rufus);
-            result[1].Should().BeSameAs(testData.Titan);
-            result[2].Should().BeSameAs(testData.Kitty);
-            result[3].Should().BeSameAs(testData.Meowswers);
-            result[4].Should().BeSameAs(testData.Tweeter);
+            result[0].ShouldBeSameAs(testData.Rufus);
+            result[1].ShouldBeSameAs(testData.Titan);
+            result[2].ShouldBeSameAs(testData.Kitty);
+            result[3].ShouldBeSameAs(testData.Meowswers);
+            result[4].ShouldBeSameAs(testData.Tweeter);
         }
     }
 }

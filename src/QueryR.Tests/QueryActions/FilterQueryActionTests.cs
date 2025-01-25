@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using QueryR.QueryActions;
+﻿using QueryR.QueryActions;
 using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +43,8 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(1);
-            list.First().Should().Be(testData.Craig);
+            count.ShouldBe(1);
+            list.First().ShouldBe(testData.Craig);
         }
 
         [Theory, AutoSubData]
@@ -78,8 +78,8 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(1);
-            list.First().Should().Be(testData.Craig);
+            count.ShouldBe(1);
+            list.First().ShouldBe(testData.Craig);
         }
 
         [Theory, AutoSubData]
@@ -112,8 +112,8 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(1);
-            list.First().Should().Be(testData.Craig);
+            count.ShouldBe(1);
+            list.First().ShouldBe(testData.Craig);
         }
 
 
@@ -147,8 +147,8 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(1);
-            list.First().Should().Be(testData.Bob);
+            count.ShouldBe(1);
+            list.First().ShouldBe(testData.Bob);
         }
         [Theory, AutoSubData]
         internal void Filter_WhenParentNavigationPropertyPathIsCollection_ShouldWorkAsExpected(
@@ -180,9 +180,9 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(2);
-            list.Should().Contain(testData.Craig);
-            list.Should().Contain(testData.Bob);
+            count.ShouldBe(2);
+            list.ShouldContain(testData.Craig);
+            list.ShouldContain(testData.Bob);
         }
 
         [Theory, AutoSubData]
@@ -215,9 +215,9 @@ namespace QueryR.Tests.QueryActions
             var exception = Record.Exception(() => result = sut.Execute(query, queryResult));
 
             //assert
-            exception.Should().BeNull();
+            exception.ShouldBeNull();
             var (count, items) = result.GetCountAndList();
-            items.Should().BeEquivalentTo(testData.Persons);
+            items.ShouldBeEquivalentTo(testData.Persons);
         }
 
         [Theory, AutoSubData]
@@ -250,9 +250,9 @@ namespace QueryR.Tests.QueryActions
             var exception = Record.Exception(() => result = sut.Execute(query, queryResult));
 
             //assert
-            exception.Should().BeNull();
+            exception.ShouldBeNull();
             var (count, items) = result.GetCountAndList();
-            items.Should().BeEquivalentTo(testData.Persons);
+            items.ShouldBeEquivalentTo(testData.Persons);
         }
 
         [Theory, AutoSubData]
@@ -266,9 +266,9 @@ namespace QueryR.Tests.QueryActions
             var result = Record.Exception(() => sut.Execute<Person>(query, null));
 
             //assert
-            var ex = result.Should().BeOfType<ArgumentNullException>().Which;
-            ex.ParamName.Should().Be("queryResult");
-            ex.Message.Should().StartWith("QueryResult cannot be null.");
+            var ex = result.ShouldBeOfType<ArgumentNullException>();
+            ex.ParamName.ShouldBe("queryResult");
+            ex.Message.ShouldStartWith("QueryResult cannot be null.");
         }
 
         [Theory, AutoSubData]
@@ -287,9 +287,9 @@ namespace QueryR.Tests.QueryActions
             var result = Record.Exception(() => sut.Execute(query, queryResult));
 
             // Assert
-            var ex = result.Should().BeOfType<ArgumentNullException>().Which;
-            ex.ParamName.Should().Be("queryResult.PagedQuery");
-            ex.Message.Should().StartWith("PagedQuery within QueryResult cannot be null.");
+            var ex = result.ShouldBeOfType<ArgumentNullException>();
+            ex.ParamName.ShouldBe("queryResult.PagedQuery");
+            ex.Message.ShouldStartWith("PagedQuery within QueryResult cannot be null.");
         }
 
         [Theory, AutoSubData]
@@ -308,9 +308,9 @@ namespace QueryR.Tests.QueryActions
             var result = Record.Exception(() => sut.Execute(query, queryResult));
 
             // Assert
-            var ex = result.Should().BeOfType<ArgumentNullException>().Which;
-            ex.ParamName.Should().Be("queryResult.CountQuery");
-            ex.Message.Should().StartWith("CountQuery within QueryResult cannot be null.");
+            var ex = result.ShouldBeOfType<ArgumentNullException>();
+            ex.ParamName.ShouldBe("queryResult.CountQuery");
+            ex.Message.ShouldStartWith("CountQuery within QueryResult cannot be null.");
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using QueryR.QueryActions;
+﻿using QueryR.QueryActions;
 using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System.Linq;
 using Xunit;
 using static QueryR.Tests.TestHelpers.TestData;
@@ -37,8 +37,8 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(2);
-            list.First().Should().Be(testData.Craig);
+            count.ShouldBe(2);
+            list.First().ShouldBe(testData.Craig);
         }
     }
 }

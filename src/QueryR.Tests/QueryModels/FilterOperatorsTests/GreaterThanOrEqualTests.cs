@@ -1,12 +1,10 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace QueryR.Tests.QueryModels.FilterOperatorsTests;
@@ -27,7 +25,7 @@ public class GreaterThanOrEqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value >= valueToCompare);
+        result.ShouldAllBe(value => value >= valueToCompare);
     }
 
     [Theory, AutoSubData]
@@ -45,6 +43,6 @@ public class GreaterThanOrEqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value >= valueToCompare);
+        result.ShouldAllBe(value => value >= valueToCompare);
     }
 }

@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System.Linq;
 using Xunit;
 
@@ -37,10 +37,10 @@ namespace QueryR.Tests
             //assert
             var (Count, Items) = result.GetCountAndList();
 
-            Count.Should().Be(3);
+            Count.ShouldBe(3);
             foreach(var item in Items)
             {
-                item.OwnerName.Should().Be("Craig");
+                item.OwnerName.ShouldBe("Craig");
             }
         }
     }

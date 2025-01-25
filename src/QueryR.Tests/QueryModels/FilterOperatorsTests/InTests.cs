@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ public class InTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value == valueToFind);
+        result.ShouldAllBe(value => value == valueToFind);
     }
 
     [Theory, AutoSubData]
@@ -45,6 +45,6 @@ public class InTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value == valueToFind);
+        result.ShouldAllBe(value => value == valueToFind);
     }
 }

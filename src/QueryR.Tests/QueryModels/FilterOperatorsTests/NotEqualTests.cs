@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ public class NotEqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value != valueToCompare);
+        result.ShouldAllBe(value => value != valueToCompare);
     }
 
     [Theory, AutoSubData]
@@ -43,7 +43,7 @@ public class NotEqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value != valueToCompare);
+        result.ShouldAllBe(value => value != valueToCompare);
     }
 
     [Theory, AutoSubData]
@@ -61,7 +61,7 @@ public class NotEqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value != valueToCompare);
+        result.ShouldAllBe(value => value != valueToCompare);
     }
 
     [Theory, AutoSubData]
@@ -79,6 +79,6 @@ public class NotEqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value != valueToCompare);
+        result.ShouldAllBe(value => value != valueToCompare);
     }
 }

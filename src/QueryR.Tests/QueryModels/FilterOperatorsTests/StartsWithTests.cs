@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ public class StartsWithTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value.StartsWith(valueToStartWith));
+        result.ShouldAllBe(value => value.StartsWith(valueToStartWith));
     }
 }
 

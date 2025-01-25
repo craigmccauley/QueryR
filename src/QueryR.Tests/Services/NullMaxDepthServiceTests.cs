@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Services;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using Xunit;
 
 namespace QueryR.Tests.Services;
@@ -16,6 +16,6 @@ public class NullMaxDepthServiceTests
         var result = sut.GetMaxDepth(query);
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 }

@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +25,8 @@ public class EqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().HaveCount(1);
-        result.First().Should().Be(valueToEqual);
+        result.ShouldHaveSingleItem();
+        result.First().ShouldBe(valueToEqual);
     }
 
     [Theory, AutoSubData]
@@ -44,8 +44,8 @@ public class EqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().HaveCount(1);
-        result.First().Should().Be(valueToEqual);
+        result.ShouldHaveSingleItem();
+        result.First().ShouldBe(valueToEqual);
     }
     [Theory, AutoSubData]
     public void Equal_ShouldWorkOnGuid(
@@ -62,8 +62,8 @@ public class EqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().HaveCount(1);
-        result.First().Should().Be(valueToEqual);
+        result.ShouldHaveSingleItem();
+        result.First().ShouldBe(valueToEqual);
     }
     [Theory, AutoSubData]
     public void Equal_ShouldWorkOnDateTime(
@@ -80,8 +80,8 @@ public class EqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().HaveCount(1);
-        result.First().Should().Be(valueToEqual);
+        result.ShouldHaveSingleItem();
+        result.First().ShouldBe(valueToEqual);
     }
     public class TestDummy { }
     [Theory, AutoSubData]
@@ -99,7 +99,7 @@ public class EqualTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().HaveCount(1);
-        result.First().Should().Be(valueToEqual);
+        result.ShouldHaveSingleItem();
+        result.First().ShouldBe(valueToEqual);
     }
 }

@@ -1,10 +1,10 @@
 ﻿using AutoFixture.Xunit2;
-using FluentAssertions;
 using NSubstitute;
 using QueryR.QueryActions;
 using QueryR.QueryModels;
 using QueryR.Services;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -51,10 +51,10 @@ namespace QueryR.Tests.QueryActions
 
             //assert
             var (count, list) = result.GetCountAndList();
-            count.Should().Be(2);
-            list.First().Id.Should().Be(default);
-            list.First().Name.Should().Be(testData.Craig.Name);
-            list.First().Pets.Should().BeNull();
+            count.ShouldBe(2);
+            list.First().Id.ShouldBe(default);
+            list.First().Name.ShouldBe(testData.Craig.Name);
+            list.First().Pets.ShouldBeNull();
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using FluentAssertions;
-using QueryR.QueryModels;
+﻿using QueryR.QueryModels;
 using QueryR.Tests.TestHelpers;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace QueryR.Tests.QueryModels.FilterOperatorsTests;
@@ -27,6 +25,6 @@ public class ContainsTests
         var result = values.AsQueryable().Where(whereExpression).ToList();
 
         //assert
-        result.Should().OnlyContain(value => value.Contains(valueToContain));
+        result.ShouldAllBe(value => value.Contains(valueToContain));
     }
 }
